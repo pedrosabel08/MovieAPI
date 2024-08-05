@@ -53,6 +53,23 @@ main#movies-list {
     margin-top: 20px;
 }
 
+.genre {
+    padding: 10px;
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+select {
+    padding: 12px;
+    width: 300px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 15px;
+}
+
 @media (max-width: 768px) {
     #movies-list {
         grid-template-columns: repeat(2, 1fr);
