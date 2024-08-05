@@ -72,16 +72,34 @@ main#movies-list {
     cursor: pointer;
 }
 
-.genre {
+nav {
     padding: 30px;
     border-bottom: 2px solid black;
     border-top: 2px solid black;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 20px;
 }
 
-select {
+.search input {
+    padding: 10px;
+    width: 400px;
+} 
+
+.search button {
+    padding: 10px;
+    margin-left: 20px;
+    transition: 0.3s all ease;
+}
+
+.search button:hover {
+    cursor: pointer;
+    scale: 1.2;
+
+}
+
+.genre select {
     padding: 12px;
     width: 300px;
     font-size: 16px;
@@ -102,6 +120,14 @@ select {
 }
 
 @media (max-width: 768px) {
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .search input {
+        width: 200px;
+    }
     #movies-list {
         grid-template-columns: 1fr;
     }

@@ -3,6 +3,7 @@ let currentPage = 1;
 const moviesPerPage = 20;
 const imageBaseUrl = 'https://image.tmdb.org/t/p/w200';
 let selectedGenre = '';
+let searchQuery = '';
 
 function fetchGenres() {
     const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=pt-BR`;
@@ -26,10 +27,15 @@ function populateGenreDropdown(genres) {
     });
 }
 
-function fetchMovies(page, genreId = '') {
-    let url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=pt-BR&page=${page}`;
-    if (genreId) {
-        url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=pt-BR&page=${page}&with_genres=${genreId}`;
+function fetchMovies(page, genreId = '', query = '') {
+    let url;
+    if (query) {
+        url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=pt-BR&page=${page}&query=${encodeURIComponent(query)}`;
+    } else {
+        url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=pt-BR&page=${page}`;
+        if (genreId) {
+            url += `&with_genres=${genreId}`;
+        }
     }
 
     fetch(url)
@@ -70,16 +76,23 @@ function updateNavigation(page, totalPages) {
 
 function changePage(delta) {
     currentPage += delta;
-    fetchMovies(currentPage, selectedGenre);
+    fetchMovies(currentPage, selectedGenre, searchQuery);
 }
 
 function handleGenreChange(event) {
     selectedGenre = event.target.value;
     currentPage = 1;
-    fetchMovies(currentPage, selectedGenre);
+    fetchMovies(currentPage, selectedGenre, searchQuery);
+}
+
+function handleSearch() {
+    searchQuery = document.getElementById('search-input').value;
+    currentPage = 1;
+    fetchMovies(currentPage, selectedGenre, searchQuery);
 }
 
 document.getElementById('genre-select').addEventListener('change', handleGenreChange);
+document.getElementById('search-button').addEventListener('click', handleSearch);
 
 fetchGenres();
 fetchMovies(currentPage);
