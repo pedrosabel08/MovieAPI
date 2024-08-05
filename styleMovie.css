@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Lato", sans-serif;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgb(255, 192, 0);
+    background: linear-gradient(90deg, rgba(255, 192, 0, 1) 28%, rgba(245, 31, 31, 1) 82%);
+}
+
+header button {
+    position: absolute;
+    left: 0;
+    margin-left: 15px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s all ease;
+}
+
+header button:hover {
+    scale: 1.2;
+}
+
+.movie {
+    padding: 50px;
+}
+
+.postFilm {
+    display: flex;
+    justify-content: center;
+}
+
+.movie p {
+    margin-top: 15px;
+}
+
+.movie h1 {
+    font-size: 36px;
+    margin-top: 50px;
+}
+
+.movie p#overview {
+    font-size: 20px;
+}

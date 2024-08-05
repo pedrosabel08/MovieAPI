@@ -49,12 +49,14 @@ function displayMovies(movies) {
         movieElement.className = 'movie';
         const posterUrl = movie.poster_path ? `${imageBaseUrl}${movie.poster_path}` : 'https://via.placeholder.com/200x300?text=Sem+Imagem';
         movieElement.innerHTML = `
-            <img src="${posterUrl}" alt="${movie.title} Poster">
-            <div class="description">
-                <h2>${movie.title}</h2>
-                <p>Data de lançamento: <b>${movie.release_date}</b></p>
-                <p>Avaliação: ${movie.vote_average}</p>
-            </div>
+            <a href="movie.html?id=${movie.id}">
+                <img src="${posterUrl}" alt="${movie.title} Poster">
+                <div class="description">
+                    <h2>${movie.title}</h2>
+                    <p>Data de lançamento: <b>${movie.release_date}</b></p>
+                    <p>Avaliação: ${movie.vote_average}</p>
+                </div>
+            </a>
         `;
         moviesList.appendChild(movieElement);
     });

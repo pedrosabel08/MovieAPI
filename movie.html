@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styleMovie.css">
+    <title>Detalhes do Filme</title>
+</head>
+
+<body>
+
+    <header>
+        <button onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
+        <h1>Detalhes do Filme</h1>
+    </header>
+    <div id="movie-details"></div>
+
+    <script>
+        const apiKey = 'f4c7538bc33b5aa1361f4ae4bfb87b27';
+        const imageBaseUrl = 'https://image.tmdb.org/t/p/w200';
+
+        function getMovieId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        async function fetchMovieDetails(movieId) {
+            try {
+                const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=pt-BR`;
+                const creditsUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}&language=pt-BR`;
+
+                const [movieResponse, creditsResponse] = await Promise.all([
+                    fetch(movieUrl),
+                    fetch(creditsUrl)
+                ]);
+
+                const movieData = await movieResponse.json();
+                const creditsData = await creditsResponse.json();
+
+                displayMovieDetails(movieData, creditsData);
+            } catch (error) {
+                console.error('Erro ao obter detalhes do filme ou créditos:', error);
+            }
+        }
+
+        function displayMovieDetails(movie, credits) {
+            const movieDetails = document.getElementById('movie-details');
+            const posterUrl = movie.poster_path ? `${imageBaseUrl}${movie.poster_path}` : 'https://via.placeholder.com/200x300?text=Sem+Imagem';
+            const genres = movie.genres.map(genre => genre.name).join(', ');
+            const spokenLanguages = movie.spoken_languages.map(lang => lang.name).join(', ');
+            const castList = credits.cast.slice(0, 5).map(actor => `${actor.name} como ${actor.character}`).join(', ');
+            const director = credits.crew.find(member => member.job === 'Director')?.name || 'Desconhecido';
+
+            movieDetails.innerHTML = `
+                <div class="movie">
+                    <div class="postFilm">
+                        <img src="${posterUrl}" alt="${movie.title} Poster">
+                    </div>
+                    <h1>${movie.title}</h1>
+                    <p id='overview'>${movie.overview}</p>
+                    <p><b>Data de lançamento:</b> ${movie.release_date}</p>
+                    <p><b>Duração:</b> ${movie.runtime} minutos</p>
+                    <p><b>Avaliação:</b> ${movie.vote_average}</p>
+                    <p><b>Gêneros:</b> ${genres}</p>
+                    <p><b>Idiomas:</b> ${spokenLanguages}</p>
+                    <p><b>Orçamento:</b> $${movie.budget.toLocaleString()}</p>
+                    <p><b>Receita:</b> $${movie.revenue.toLocaleString()}</p>
+                    <p><b>Diretor:</b> ${director}</p>
+                    <p><b>Elenco Principal:</b> ${castList}</p>
+                </div>
+            `;
+        }
+
+        const movieId = getMovieId();
+        if (movieId) {
+            fetchMovieDetails(movieId);
+        } else {
+            console.error('ID do filme não encontrado na URL.');
+        }
+    </script>
+</body>
+
+</html>
