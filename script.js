@@ -52,7 +52,7 @@ function displayMovies(movies) {
             <img src="${posterUrl}" alt="${movie.title} Poster">
             <div class="description">
                 <h2>${movie.title}</h2>
-                <p>Data de lançamento: ${movie.release_date}</p>
+                <p>Data de lançamento: <b>${movie.release_date}</b></p>
                 <p>Avaliação: ${movie.vote_average}</p>
             </div>
         `;

@@ -54,7 +54,7 @@ main#movies-list {
 }
 
 .genre {
-    padding: 10px;
+    padding: 30px;
     border-bottom: 2px solid black;
     border-top: 2px solid black;
     display: flex;
