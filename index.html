@@ -27,7 +27,15 @@
                 <option value="">Todos os gêneros</option>
             </select>
         </div>
-
+        <div class="filter">
+            <select id="sort-select">
+                <option value="popularity.desc">Mais populares</option>
+                <option value="vote_average.desc">Melhor avaliação</option>
+                <option value="vote_average.asc">Pior avaliação</option>
+                <option value="original_title.asc">Título A-Z</option>
+                <option value="original_title.desc">Título Z-A</option>
+            </select>
+        </div>
     </nav>
 
     <div id="movies-list"></div>

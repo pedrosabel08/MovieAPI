@@ -4,35 +4,14 @@ const moviesPerPage = 20;
 const imageBaseUrl = 'https://image.tmdb.org/t/p/w200';
 let selectedGenre = '';
 let searchQuery = '';
+let sortBy = 'popularity.desc';
 
-function fetchGenres() {
-    const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=pt-BR`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            populateGenreDropdown(data.genres);
-        })
-        .catch(error => console.error('Erro ao obter gêneros:', error));
-}
-
-function populateGenreDropdown(genres) {
-    const genreSelect = document.getElementById('genre-select');
-    genreSelect.innerHTML = '<option value="">Todos os gêneros</option>';
-    genres.forEach(genre => {
-        const option = document.createElement('option');
-        option.value = genre.id;
-        option.textContent = genre.name;
-        genreSelect.appendChild(option);
-    });
-}
-
-function fetchMovies(page, genreId = '', query = '') {
+function fetchMovies(page, genreId = '', query = '', sortBy = 'popularity.desc') {
     let url;
     if (query) {
-        url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=pt-BR&page=${page}&query=${encodeURIComponent(query)}`;
+        url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=pt-BR&page=${page}&query=${encodeURIComponent(query)}&sort_by=${sortBy}`;
     } else {
-        url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=pt-BR&page=${page}`;
+        url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=pt-BR&page=${page}&sort_by=${sortBy}`;
         if (genreId) {
             url += `&with_genres=${genreId}`;
         }
@@ -45,6 +24,25 @@ function fetchMovies(page, genreId = '', query = '') {
             updateNavigation(data.page, data.total_pages);
         })
         .catch(error => console.error('Erro ao obter filmes:', error));
+}
+
+function handleSortChange(event) {
+    sortBy = event.target.value;
+    currentPage = 1;
+    fetchMovies(currentPage, selectedGenre, searchQuery, sortBy);
+}
+
+document.getElementById('sort-select').addEventListener('change', handleSortChange);
+
+function populateGenreDropdown(genres) {
+    const genreSelect = document.getElementById('genre-select');
+    genreSelect.innerHTML = '<option value="">Todos os gêneros</option>';
+    genres.forEach(genre => {
+        const option = document.createElement('option');
+        option.value = genre.id;
+        option.textContent = genre.name;
+        genreSelect.appendChild(option);
+    });
 }
 
 function displayMovies(movies) {
@@ -76,23 +74,34 @@ function updateNavigation(page, totalPages) {
 
 function changePage(delta) {
     currentPage += delta;
-    fetchMovies(currentPage, selectedGenre, searchQuery);
+    fetchMovies(currentPage, selectedGenre, searchQuery, sortBy);
 }
 
 function handleGenreChange(event) {
     selectedGenre = event.target.value;
     currentPage = 1;
-    fetchMovies(currentPage, selectedGenre, searchQuery);
+    fetchMovies(currentPage, selectedGenre, searchQuery, sortBy);
 }
 
 function handleSearch() {
     searchQuery = document.getElementById('search-input').value;
     currentPage = 1;
-    fetchMovies(currentPage, selectedGenre, searchQuery);
+    fetchMovies(currentPage, selectedGenre, searchQuery, sortBy);
 }
 
 document.getElementById('genre-select').addEventListener('change', handleGenreChange);
 document.getElementById('search-button').addEventListener('click', handleSearch);
 
+function fetchGenres() {
+    const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=pt-BR`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            populateGenreDropdown(data.genres);
+        })
+        .catch(error => console.error('Erro ao obter gêneros:', error));
+}
+
 fetchGenres();
-fetchMovies(currentPage);
+fetchMovies(currentPage, selectedGenre, searchQuery, sortBy);
